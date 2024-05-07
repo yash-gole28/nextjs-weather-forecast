@@ -73,6 +73,38 @@ export default function Home() {
         setData(sortedData);
     };
 
+    
+
+    const handleSortChange = () => {
+        setSortOrder(prevSortOrder => !prevSortOrder);
+    };
+
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const inputValue = event.target.value;
+        setSearchQuery(inputValue);
+        if (inputValue.trim() === '') {
+            setData(originalData);
+        } else {
+            const filteredData = originalData.filter(item =>
+                item.ascii_name.toLowerCase().includes(inputValue.toLowerCase())
+            );
+            setData(filteredData);
+        }
+    };
+
+    
+
+    const addToHistory = (name: string, lat: number, lon: number) => {
+        const updatedHistory = [{ name, lat, lon }, ...history];
+        setHistory(updatedHistory);
+        localStorage.setItem('cityHistory', JSON.stringify(updatedHistory));
+    };
+
+    const clearHistory = () => {
+        setHistory([]);
+        localStorage.removeItem('cityHistory');
+    };
+
     useEffect(() => {
         fetchData(page);
     }, [page]);
@@ -106,35 +138,6 @@ export default function Home() {
         };
     }, []);
 
-    const handleSortChange = () => {
-        setSortOrder(prevSortOrder => !prevSortOrder);
-    };
-
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const inputValue = event.target.value;
-        setSearchQuery(inputValue);
-        if (inputValue.trim() === '') {
-            setData(originalData);
-        } else {
-            const filteredData = originalData.filter(item =>
-                item.ascii_name.toLowerCase().includes(inputValue.toLowerCase())
-            );
-            setData(filteredData);
-        }
-    };
-
-    
-
-    const addToHistory = (name: string, lat: number, lon: number) => {
-        const updatedHistory = [{ name, lat, lon }, ...history];
-        setHistory(updatedHistory);
-        localStorage.setItem('cityHistory', JSON.stringify(updatedHistory));
-    };
-
-    const clearHistory = () => {
-        setHistory([]);
-        localStorage.removeItem('cityHistory');
-    };
   return (
     <div className=' w-full '>
     <div className=' ml-4 mr-4'>
